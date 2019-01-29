@@ -1,2 +1,2 @@
-# spring-mybaitc
+# Eric Project
 a project to study 
