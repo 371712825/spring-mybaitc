@@ -1,0 +1,24 @@
+
+activeMQ	1
+rabbitMQ	1
+kafka	0
+hadoop	0
+solr	1
+hive
+hbase
+luence
+elasticsearch
+yarn
+
+Nutch	Nutch是apache的一个子项目，包括大规模爬虫工具，能够抓取和分辨web网站数据
+jsoup	jsoup 是一款Java 的HTML解析器，可直接解析某个URL地址、HTML文本内容
+heritrix	Heritrix 是一个由 java 开发的、开源的网络爬虫，用户可以使用它来从网上抓取想要的资源。其最出色之处在于它良好的可扩展性，方便用户实现自己的抓取逻辑
+
+
+技术
+数据量的考虑
+分片
+索引
+分区
+
+
