@@ -17,8 +17,6 @@ public class App
 {
     public static void main( String[] args )
     {
-        System.out.println( "---------------SPRING BOOT START------------------" );
         SpringApplication.run(App.class, args);
-        System.out.println( "---------------------SUCCESS------------------" );
     }
 }

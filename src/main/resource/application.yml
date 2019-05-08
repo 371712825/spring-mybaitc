@@ -16,17 +16,12 @@ datasource:
   url: jdbc:mysql://192.168.10.128:3306/pihy?${MYSQLPARAMS}
   username: root
   password: root
+
     
 ---
 spring: 
   profiles: grey
-redis:
-  host: ${FAVAPI_REDIS_MASTER_A_HOST}
-  port: ${FAVAPI_REDIS_MASTER_A_PORT}
   
 ---
 spring: 
   profiles: product
-redis:
-  host: ${FAVAPI_REDIS_MASTER_A_HOST}
-  port: ${FAVAPI_REDIS_MASTER_A_PORT}

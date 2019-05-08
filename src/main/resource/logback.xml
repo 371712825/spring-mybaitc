@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property name="pattern" value="%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
+	<property name="email_subject" value="【ERROR】:错误报警" />
+	<property name="psm" value="/xiaodai" />
+	<property name="logPath" value="G:/data/wwwroot/xiaodai/logs" />
+
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+            <pattern>${pattern}</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logPath}/console.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${logPath}/console.%d{yyyy-MM-dd}_%i.log.zip
+			</FileNamePattern>
+			<!-- 保留7天 -->
+			<MaxHistory>1</MaxHistory>
+			<cleanHistoryOnStart>true</cleanHistoryOnStart>
+			<!-- 日志每到50M，自动一打包 -->
+			<TimeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>30MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+        <encoder>
+            <pattern>${pattern}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+	</appender>
+
+	<appender name="email" class="XiaoTest.Xiaodai.util.ErrorEmailSender">
+		<smtpHost>smtp.mailtg.mama.cn</smtpHost>
+		<smtpPort>25</smtpPort>
+		<username>${email.username}</username>
+		<password>${email.password}</password>
+		<SSL>false</SSL>
+		<asynchronousSending>true</asynchronousSending>
+		<to>${email.to.username}</to>
+		<from>${email.username}</from>
+		<subject>${email_subject}</subject>
+		<layout class="ch.qos.logback.classic.html.HTMLLayout">
+			<pattern>%date%level%thread%logger{0}%message</pattern>
+		</layout>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter" >
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+
+	<logger name="xiaodai.log" level="INFO">
+		<appender-ref ref="rollingFile" />
+		<appender-ref ref="console" />
+	</logger>
+	
+	<logger name="xiaodai.errorlog" level="ERROR" additivity="false">
+		<appender-ref ref="email" />
+	</logger> 
+	
+	<logger name="org.apache.kafka" level="ERROR"></logger>
+	<logger name="org.springframework.kafka" level="ERROR"></logger>
+	
+	<root level="INFO">
+        <appender-ref ref="console" />
+        <appender-ref ref="rollingFile" />
+	</root>
+
+</configuration>

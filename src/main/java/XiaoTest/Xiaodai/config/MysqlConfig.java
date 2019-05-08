@@ -56,7 +56,8 @@ public class MysqlConfig {
 		return xconfig;
 	}
 	
-	@Bean(name="datasource")
+	@Deprecated
+	//@Bean(name="datasource")
 	public DataSource getDataSource() {
 		DataSourceProperties dataSourceProperties = new DataSourceProperties();
 		dataSourceProperties.setUrl(url);
