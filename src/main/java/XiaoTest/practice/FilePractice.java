@@ -1,21 +1,95 @@
 package XiaoTest.practice;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.alibaba.fastjson.JSONObject;
+
+import akka.stream.impl.Buffer;
 
 
 
 public class FilePractice {
 
 	public static void main(String[] args) throws Exception{
+		
+		FileInputStream fisinit = new FileInputStream(new File("G:\\\\uids-03.json"));
+		BufferedReader br = new BufferedReader(new InputStreamReader(fisinit));
+		
+		String str;
+		Map<String,String> map = new HashMap<>();
+		
+		while((str = br.readLine()) != null) {
+			JSONObject json = JSONObject.parseObject(str);
+			map.put(json.getString("devid"), json.getString("types"));
+		}
+		
+		FileInputStream fis = new FileInputStream(new File("G:\\\\用户行为分析-4.xlsx"));
+		XSSFWorkbook xw = new XSSFWorkbook(fis);
+		
+		Sheet sheet = xw.getSheet("mobileid");
+		
+		for (int i=3,len=sheet.getPhysicalNumberOfRows();i<len;i++) {
+			org.apache.poi.ss.usermodel.Row row = sheet.getRow(i);
+			Cell cellid = row.getCell(0);
+			String uid = cellid.getStringCellValue();
+			
+			/*if (map.containsKey(uid)) {
+				row.createCell(5).setCellValue("1");
+			}*/
+			
+			if (!map.containsKey(uid)) continue;
+			String[] typess = map.get(uid).split(",");
+			Set<String> types = new HashSet<>(Arrays.asList(typess));
+			Iterator<String> its = types.iterator();
+			
+			while(its.hasNext()) {
+				String tmp = its.next();
+				row.createCell(6+Integer.parseInt(tmp)).setCellValue("1");
+			}
+			
+			/*for (int j=0,jlen=types.length;j<jlen;j++) {
+				String tmp = types[j];
+				
+				row.createCell(6+Integer.parseInt(tmp)).setCellValue("1");
+			}*/
+			
+			/*if (map.containsKey(uid)) {
+				row.createCell(3).setCellValue(map.get(uid).getString("param01"));
+				row.createCell(4).setCellValue(map.get(uid).getString("param02"));
+			}*/
+		}
+		
+		map = null;
+		
+		FileOutputStream output = new FileOutputStream("G:\\\\用户行为分析-5.xlsx");
+		
+		xw.write(output);
+		
+		output.flush();
+		output.close();
+		fisinit.close();
+		fis.close();
+		
+		//sheet.getRow(0).getCell(0).getStringCellValue();
 		
 		//用于解析上报数据-普通版	无法解析的用python版
 		/*String str = "\\x84\\xAAproperties\\x98\\x87\\xACclose_reason";

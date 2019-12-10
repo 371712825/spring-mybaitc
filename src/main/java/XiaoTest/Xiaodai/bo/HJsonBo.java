@@ -1,14 +1,19 @@
 package XiaoTest.Xiaodai.bo;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-import org.apache.flink.api.java.typeutils.runtime.kryo.JavaSerializer;
 
 /** 
 * @author Lusx 
 * @date 2019年5月13日 下午2:19:18 
 */
-public class HJsonBo extends JavaSerializer{
+public class HJsonBo implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2012536676135598060L;
 
 	private String remote_addr;
 	

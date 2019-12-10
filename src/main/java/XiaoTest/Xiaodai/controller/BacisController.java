@@ -1,18 +1,22 @@
 package XiaoTest.Xiaodai.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.Path;
-
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 import XiaoTest.Xiaodai.bo.ModelBo;
 import XiaoTest.Xiaodai.bo.Result;
@@ -100,12 +104,51 @@ public class BacisController {
 	public String hadoopSetFile(String filePath) {
 		
 		try {
-			FSDataOutputStream output = HdfsUtils.getInstance().create(new Path("/data/xiaolu/"+filePath), true);
+			//FileInputStream fis = new FileInputStream(new File("G:\\part.task_Kafka-HDFS-BODY_1554048600076_0_1.avro"));
+			FSDataOutputStream output = HdfsUtils.getInstance().create(new Path("/data/xiaolu/hadoop/"+filePath), true);
+			
+			byte[] newLineBytes = "\n".getBytes("UTF-8");
 			byte[] tempBytes = null;
+			JSONObject tmp = new JSONObject();
 			
-	    	tempBytes = filePath.getBytes("UTF-8");
-			output.write(tempBytes, 0, tempBytes.length);
+			for (int i=0;i<100;i++) {
+				String cki = UUID.randomUUID().toString();
+				tmp.put("itemid", "cm_"+i);
+				tmp.put("cookieid", cki);
+				tmp.put("timestamp", new DateTime().getMillis());
+				tmp.put("hyperUniqueCookieid", cki);
+				tmp.put("totalCookieid", 1L);
+				
+				tempBytes = tmp.toJSONString().getBytes("UTF-8");
+				output.write(tempBytes, 0, tempBytes.length);
+				output.write(newLineBytes, 0, newLineBytes.length);
+			}
 			
+			/*FSDataOutputStream output = HdfsUtils.getInstance().create(new Path("/data/xiaolu/hadoop/"+filePath), true);
+			
+			byte[] newLineBytes = "\n".getBytes("UTF-8");
+			byte[] tempBytes = null;
+			JSONObject tmp = new JSONObject();
+			
+			for (int i=0;i<10;i++) {
+				tmp.put("uid", i);
+				tmp.put("cookie", i*i);
+				tmp.put("name", "psad"+i);
+				
+				tempBytes = tmp.toJSONString().getBytes("UTF-8");
+				output.write(tempBytes, 0, tempBytes.length);
+				output.write(newLineBytes, 0, newLineBytes.length);
+			}*/
+			
+			/*HSSFWorkbook workbook = new HSSFWorkbook();
+			HSSFSheet sheet = workbook.createSheet("test");
+			HSSFRow row = sheet.createRow(0);
+			for (int i=0;i<10;i++) {
+				row.createCell(i+1).setCellValue(i);
+			}
+			
+			workbook.write(output);*/
+	    	
 			output.flush();
 		    output.close();
 			
@@ -120,7 +163,7 @@ public class BacisController {
 	public String hadoopDeleteFile(String filePath) {
 		
 		try {
-			HdfsUtils.getInstance().delete(new Path("/data/xiaolu/"+filePath), true);
+			HdfsUtils.getInstance().delete(new Path("/data/xiaolu/hadoop/"+filePath), true);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

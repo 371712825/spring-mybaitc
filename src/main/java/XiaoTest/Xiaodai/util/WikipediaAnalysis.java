@@ -1,15 +1,15 @@
 package XiaoTest.Xiaodai.util;
 
-import org.apache.avro.hadoop.io.AvroSequenceFile.Writer;
 import org.apache.flink.api.common.functions.FilterFunction;
-import org.apache.flink.api.common.typeutils.TypeSerializer;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.objenesis.strategy.StdInstantiatorStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
+import com.esotericsoftware.kryo.Kryo;
 
 import XiaoTest.Xiaodai.bo.HJsonBo;
 
@@ -62,10 +62,9 @@ public class WikipediaAnalysis {
 			StreamExecutionEnvironment see = StreamExecutionEnvironment.getExecutionEnvironment();
 			see.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
 			see.setParallelism(1);
-			see.getConfig().registerKryoType(HJsonBo.class);;
+			//see.getConfig().registerKryoType(HJsonBo.class);;
 			
 			//see.getConfig().registerPojoType(HJsonBo.class);
-			
 			//see.registerType(HJsonBo.class);
 			
 			DataStream<String> ds = see.readTextFile(HdfsUtils.HOST + "/data/xiaolu/hadoop/dmp-full.json");
