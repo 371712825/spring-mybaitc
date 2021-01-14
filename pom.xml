@@ -15,7 +15,7 @@
     <flink.version>1.8.0</flink.version>
     <spark.version>2.1.0</spark.version>
     <hadoop.version>2.7.3</hadoop.version>
-    <poi.version>3.9</poi.version>
+    <poi.version>4.1.2</poi.version>
   </properties>
 
   <dependencies>
